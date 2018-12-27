@@ -1,0 +1,140 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+    static final int[] R_OFFSETS = { -1, 0, 1, 0 };
+    static final int[] C_OFFSETS = { 0, 1, 0, -1 };
+    // Complete the bomberMan function below.
+    static String[] bomberMan(int n, String[] grid) {
+
+        
+        
+        int lenR = grid.length;
+        int lenC = grid[0].length();
+        String[] Sol = new String[lenR];
+
+        Arrays.fill(Sol,"");
+
+        int[][] gridArr = new int[lenR][lenC];
+
+
+        for (int r = 0; r < lenR; r++) {
+            for (int c = 0; c < lenC; c++) {
+                gridArr[r][c] = grid[r].charAt(c) == 'O' ? 3 : 0;
+            }
+        }
+
+        gridArr = solve(gridArr, n);
+
+        for (int r = 0; r < lenR; r++) {
+            for (int c = 0; c < lenC; c++) {
+                char check = gridArr[r][c] == 0? '.' : 'O' ;
+
+                Sol[r] += check;
+            }
+            //System.out.println();
+        }
+
+        return Sol;
+
+    }
+
+    static int[][] solve(int[][] grid, int N) {
+        int R = grid.length;
+        int C = grid[0].length;
+
+        if (N >= 2) {
+            N = (N - 2) % 4 + 2;
+        }
+
+        boolean plant = false;
+        for (int i = 0; i < N; i++) {
+            int[][] nextGrid = new int[R][C];
+
+            for (int r = 0; r < R; r++) {
+                for (int c = 0; c < C; c++) {
+                    if (plant) {
+                        if (grid[r][c] > 0) {
+                            nextGrid[r][c] = grid[r][c] - 1;
+                        } else {
+                            nextGrid[r][c] = 3;
+                        }
+                    } else {
+                        if (isDetonate(grid, r, c)) {
+                            nextGrid[r][c] = 0;
+                        } else {
+                            nextGrid[r][c] = Math.max(0, grid[r][c] - 1);
+                        }
+                    }
+                }
+            }
+
+            plant = !plant;
+            grid = nextGrid;
+        }
+        return grid;
+    }
+
+    static boolean isDetonate(int[][] grid, int r, int c) {
+        int R = grid.length;
+        int C = grid[0].length;
+
+        if (grid[r][c] == 1) {
+            return true;
+        }
+
+        for (int i = 0; i < R_OFFSETS.length; i++) {
+            int adjR = r + R_OFFSETS[i];
+            int adjC = c + C_OFFSETS[i];
+
+            if (adjR >= 0 && adjR < R && adjC >= 0 && adjC < C){
+                if(grid[adjR][adjC] == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] rcn = scanner.nextLine().split(" ");
+
+        int r = Integer.parseInt(rcn[0]);
+
+        int c = Integer.parseInt(rcn[1]);
+
+        int n = Integer.parseInt(rcn[2]);
+
+        String[] grid = new String[r];
+
+        for (int i = 0; i < r; i++) {
+            String gridItem = scanner.nextLine();
+            grid[i] = gridItem;
+        }
+
+        String[] result = bomberMan(n, grid);
+
+        for (int i = 0; i < result.length; i++) {
+            bufferedWriter.write(result[i]);
+
+            if (i != result.length - 1) {
+                bufferedWriter.write("\n");
+            }
+        }
+
+        bufferedWriter.newLine();
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}
