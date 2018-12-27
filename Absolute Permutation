@@ -1,0 +1,114 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    // Complete the absolutePermutation function below.
+    static int[] absolutePermutation(int n, int k) {
+        int[] arr = new int[n];
+        int[] arrSave = new int[n + 1];
+        int[] arrfalse = {-1};
+
+        if(k>n/2) return arrfalse;
+
+        if(k==0){
+            for(int i=0;i<n;i++){
+                arr[i]=i+1;
+            }
+        }
+
+        else {
+        for(int i=0;i<n/k;i++){
+            for(int j=1;j<=k;j++){
+                if(i%2!=0){
+                    arrSave[i*k+j]= Math.abs(i*k+j-k);
+                }
+                else arrSave[i*k+j]= i*k+j+k;
+                
+            }
+        }
+
+        for(int i=1;i<=n;i++){
+
+            if(arrSave[i]>n) return arrfalse;
+
+            else{
+                    if (Math.abs(arrSave[i] - i) == k) {
+                        arr[i - 1] = arrSave[i];
+                    } else
+                        return arrfalse;
+            }
+
+        }
+
+        }
+        
+
+        return arr;
+/*
+        for(int i=1;i<=n;i++){
+            arr[i]=i;
+        }
+*/
+/*
+        for (int i = 1; i <= n; i++) {
+            int m = n + i + k;
+            
+            while(m > n){
+                m-=n;
+            }
+
+
+            if((m) % n==0) arrSave[i]=n;
+            else arrSave[i] = (m)%n;
+        }
+
+        for(int i=1;i<=n;i++){
+            if(Math.abs(arrSave[i]-i)==k){
+                arr[i-1]=arrSave[i];
+            }
+            else return arrfalse;
+        }
+
+*/
+
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int t = scanner.nextInt();
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            String[] nk = scanner.nextLine().split(" ");
+
+            int n = Integer.parseInt(nk[0]);
+
+            int k = Integer.parseInt(nk[1]);
+
+            int[] result = absolutePermutation(n, k);
+
+            for (int i = 0; i < result.length; i++) {
+                bufferedWriter.write(String.valueOf(result[i]));
+
+                if (i != result.length - 1) {
+                    bufferedWriter.write(" ");
+                }
+            }
+
+            bufferedWriter.newLine();
+        }
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}
