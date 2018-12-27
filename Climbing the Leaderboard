@@ -1,0 +1,26 @@
+int* climbingLeaderboard(int scores_count, int* scores, int alice_count, int* alice, int* result_count) {
+    *result_count = alice_count;
+    
+    int* alc = malloc(alice_count*sizeof(int));
+    int j;
+    int jlast = 1;
+    int pos = 1;
+    
+    for(int i = alice_count-1;i>=0;--i){
+        if(*(alice+i)>=*(scores)) *(alc+i)=1;
+        else{
+            j=jlast;
+           while(*(alice+i)<*(scores+j)){
+               if(*(scores+j)!=*(scores+j-1)){
+                   pos++;
+               }
+               j++;
+           }
+            *(alc+i)=pos+1;
+            //pos = 1;
+            jlast = j;
+        }
+    }
+    
+    return alc;
+}
