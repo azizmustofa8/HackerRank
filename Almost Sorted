@@ -1,0 +1,111 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    // Complete the almostSorted function below.
+    static void almostSorted(int[] arr) {
+        int len = arr.length;
+
+        String strc = new String();
+
+        boolean cek = true;
+        int left=0;
+        int right=0;
+        int buff;
+        int j;
+
+        int i = 0;
+
+        while(i<len-1 && arr[i]<arr[i+1]){
+            i++;
+        }
+        left=i;
+
+        int count = 0;
+
+        while(i<len-1 && arr[i]>arr[i+1]){
+            count++;
+            i++;
+        }
+        buff = i;
+
+        if(buff<len-1){
+            if(left-1>=0){
+                if(arr[i]<arr[left-1]) cek = false;
+            }
+
+            if(i<len-1 && arr[i+1]>arr[left]){
+                right = buff+1;
+                //str = "yes";
+                if(count>1) strc = "reverse";
+                else strc = "swap";
+            }
+            else{
+                while(i<len-1 && arr[i]<arr[i+1] ){
+                    i++;
+                }
+                
+                i++;
+                buff = i;
+
+                if(i<len-1 && arr[i+1]>arr[left]){
+                    right = buff+1;
+                // str = "yes";
+                    strc = "swap";
+                }
+                else{
+                    //str = "no";
+                    cek = false;
+                }
+            }
+        }
+        else {
+            right = buff+1;
+            strc = "swap";
+        }
+        
+
+        j = buff;
+        while(j<len-1 && cek==true && arr[j]<arr[j+1]){
+            j++;
+        }
+
+        left += 1;
+        if(j<len-2) cek=false;
+
+        if(cek==true){
+            System.out.print("yes\n" + strc + " "+ left + " " + right);
+        }
+        else {
+            System.out.print("no");
+        }
+
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int n = scanner.nextInt();
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+        int[] arr = new int[n];
+
+        String[] arrItems = scanner.nextLine().split(" ");
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+        for (int i = 0; i < n; i++) {
+            int arrItem = Integer.parseInt(arrItems[i]);
+            arr[i] = arrItem;
+        }
+
+        almostSorted(arr);
+
+        scanner.close();
+    }
+}
